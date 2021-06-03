@@ -4,6 +4,8 @@ let img = "https://picsum.photos/400";
 const url = "https://vue3-course-api.hexschool.io";
 const path = "onedog";
 
+import pagination from "./pagination.js";
+
 const app = Vue.createApp({
   data() {
     return {
@@ -16,6 +18,7 @@ const app = Vue.createApp({
       pagination: {},
     };
   },
+  components: { pagination },
   methods: {
     getData(page = 1) {
       axios
@@ -66,20 +69,6 @@ const app = Vue.createApp({
     }
     axios.defaults.headers.common["Authorization"] = token;
     this.getData();
-  },
-});
-// "total_pages": 1,
-// "current_page": 1,
-// "has_pre": false,
-// "has_next": false,
-// "category": null
-app.component("pagination", {
-  template: "#pagination",
-  props: ["pages"],
-  methods: {
-    emitPage(page) {
-      this.$emit("emit-page", page); //傳送要點擊的頁數
-    },
   },
 });
 
