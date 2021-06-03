@@ -84,11 +84,13 @@
         :products="tempProducts"
         :is-new="isNew"
         :title="title"
+        ref="productModal"
         @update="getData"
       ></product-modal>
 
       <del-product-modal
         :products="tempProducts"
+        ref="delProductModal"
         @update="getData"
       ></del-product-modal>
       <!-- Modal -->
@@ -154,6 +156,13 @@
                       class="form-control"
                       placeholder="請輸入圖片連結"
                     />
+                    <input
+                      type="file"
+                      class="form-control"
+                      placeholder="請輸入圖片連結"
+                      ref="file"
+                      @change="tempImg"
+                    />
                     <img class="img-fluid" :src="products.imageUrl" />
                   </div>
                   <div class="mb-1">多圖新增</div>
@@ -171,12 +180,18 @@
                           placeholder="請輸入圖片連結"
                           v-model="products.imagesUrl[key]"
                         />
+                        <input
+                        type="file"
+                        class="form-control"
+                        ref="file"
+                        @change="tempImg"
+                      />
                         <!-- (2). 依序綁定(1)開出來的資料欄位 -->
                         <img class="img-fluid" :src="img" alt="" />
                       </div>
                     </div>
                     <div
-                      v-if="!products.imagesUrl.length || products.imagesUrl[products.imagesUrl.length - 1]"
+                      v-if="!products.imagesUrl.length || products.imagesUrl[products.imagesUrl.length - 1] || temp.length"
                     >
                       <!--
                       1. !tempProducts.imagesUrl.length：長度為0是false的話讓他變成true
@@ -184,21 +199,28 @@
                       抓陣列最後一個值，有值為true，沒值為false
 
                     -->
-                      <button
-                        class="btn btn-outline-primary btn-sm d-block w-100"
-                        @click="products.imagesUrl.push('https://picsum.photos/40'+products.imagesUrl.length)"
-                      >
-                        自動產生圖片(多圖)
-                      </button>
+
                       <button
                         class="btn btn-outline-primary btn-sm d-block w-100"
                         @click="products.imagesUrl.push('')"
                       >
                         <!-- (1). push：本來沒有欄位，push一個空字串產生欄位 -->
-                        新增圖片(多圖)
+                        新增圖片(in多圖)
                       </button>
                     </div>
                     <div v-else>
+                      <button
+                      class="btn btn-outline-primary btn-sm d-block w-100"
+                      @click="uploadImg"
+                    >
+                      上傳圖片(in多圖)
+                    </button>
+                        <button
+                          class="btn btn-outline-primary btn-sm d-block w-100"
+                          @click="multiple"
+                        >
+                          自動產生圖片(in多圖)
+                        </button>
                       <button
                         class="btn btn-outline-danger btn-sm d-block w-100"
                         @click="products.imagesUrl.pop()"
@@ -209,16 +231,22 @@
                   </div>
                   <div v-else>
                     <button
+                    class="btn btn-outline-primary btn-sm d-block w-100"
+                    @click="uploadImg('main')"
+                  >
+                    上傳圖片(in主要圖片)
+                  </button>
+                    <button
                       class="btn btn-outline-primary btn-sm d-block w-100"
                       @click="autoImg"
                     >
-                      自動產生圖片(主要圖片)
+                      自動產生圖片(in主要圖片)
                     </button>
                     <button
                       class="btn btn-outline-primary btn-sm d-block w-100"
                       @click="addImg"
                     >
-                      新增圖片(主要圖片)
+                      新增圖片(in主要圖片)
                     </button>
                   </div>
                 </div>

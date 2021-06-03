@@ -32,12 +32,15 @@ const app = Vue.createApp({
       if (action === "newItem") {
         this.isNew = true;
         this.title = "新增產品";
+        // console.log(this.$refs.productModal);
+        this.$refs.productModal.clearFile(); //清空input file內容
         this.tempProducts = { imagesUrl: [] };
         newItemModal.show();
       }
       if (action === "editItem") {
         this.isNew = false;
         this.title = "編輯產品";
+        this.$refs.productModal.clearFile();
         this.tempProducts = { ...item };
         newItemModal.show();
       }
@@ -88,6 +91,7 @@ app.component("product-modal", {
       default() {
         return {
           imagesUrl: [],
+          uploadImg: [],
         };
       },
     },
@@ -96,6 +100,11 @@ app.component("product-modal", {
       default: false,
     },
     title: "",
+  },
+  data() {
+    return {
+      temp: {},
+    };
   },
   methods: {
     addItem() {
@@ -126,11 +135,63 @@ app.component("product-modal", {
     },
     autoImg() {
       this.products.imageUrl = "https://picsum.photos/400";
-      this.products.imagesUrl.push("https://picsum.photos/399");
+      this.products.imagesUrl.push("");
+      // console.log(this.products.imagesUrl.length);
     },
-  },
-  mounted() {
-    console.log("已建立");
+    multiple(key) {
+      key = this.products.imagesUrl.length - 1;
+      console.log(key);
+      if (this.products.imagesUrl[key] == "") {
+        this.products.imagesUrl[key] =
+          "https://picsum.photos/40" + this.products.imagesUrl.length;
+        this.products.imagesUrl.push("");
+      } else {
+        this.products.imagesUrl.push(
+          "https://picsum.photos/40" + this.products.imagesUrl.length
+        );
+      }
+    },
+    tempImg(e) {
+      // this.products.uploadImg = e.target.files[0];
+      this.temp = e.target.files[0];
+      console.log(this.temp);
+    },
+    clearFile() {
+      this.$refs.file.value = null;
+    },
+    uploadImg(key) {
+      axios({
+        method: "POST",
+        url: "https://api.imgur.com/3/image",
+        data: this.temp,
+        headers: {
+          Authorization: "Client-ID d442039f04fbe67",
+        },
+        mimeType: "multipart/form-data",
+      })
+        .then((res) => {
+          if (res.data.success) {
+            // console.log(res.data.data.link);
+            if (key == "main") {
+              this.products.imageUrl = res.data.data.link;
+              this.products.imagesUrl.push("");
+            } else {
+              key = this.products.imagesUrl.length - 1;
+              this.products.imagesUrl[key] = res.data.data.link;
+              this.products.imagesUrl.push("");
+            }
+            alert("上傳圖片成功");
+            this.temp = {};
+            console.log(res.data);
+          } else {
+            alert(res.data.data.error);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          alert(e.data.data.error);
+        });
+    },
   },
 });
 
@@ -161,9 +222,6 @@ app.component("del-product-modal", {
         })
         .catch((error) => console.log(error));
     },
-  },
-  mounted() {
-    console.log("刪除元件已建立");
   },
 });
 
