@@ -11,34 +11,74 @@
       integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="css/style.css" />
   </head>
+  <style>
+    html,
+    body {
+      height: 100%;
+      text-align: center;
+    }
 
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-signin {
+      width: 100%;
+      max-width: 330px;
+      padding: 15px;
+      margin: auto;
+    }
+  </style>
   <body>
-    <div class="menu">
-      <ul class="mainmenu clearfix">
-        <li class="menuitem">Well</li>
-        <li class="menuitem">how</li>
-        <li class="menuitem">about</li>
-        <li class="menuitem">that?</li>
-      </ul>
-    </div>
-    <form id="form" class="form-signin" onsubmit="return login()">
-      <div class="form">
-        <div class="forceColor"></div>
-        <div class="topbar">
-          <div class="spanColor"></div>
-          <input type="text" class="input" id="email" placeholder="E-mail" />
-          <input
-            type="password"
-            class="input"
-            id="password"
-            placeholder="Password"
-          />
+    <div id="app">
+      <div class="container">
+        <div class="row justify-content-center">
+          <h1 class="h3 mb-3 font-weight-normal">
+            請先登入
+          </h1>
+          <div class="col-8">
+            <form id="form" class="form-signin" @submit.prevent="login">
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="username"
+                  placeholder="name@example.com"
+                  required
+                  autofocus
+                  v-model="user.username"
+                />
+                <label for="username">Email address</label>
+              </div>
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Password"
+                  required
+                  v-model="user.password"
+                />
+                <label for="password">Password</label>
+              </div>
+              <button
+                id="loginBtn"
+                class="btn btn-lg btn-primary w-100 mt-3"
+                type="submit"
+              >
+                登入
+              </button>
+            </form>
+          </div>
         </div>
-        <button class="submit" id="submit">Login</button>
+        <p class="mt-5 mb-3 text-muted">
+          &copy; 2021~∞ - 六角學院
+        </p>
       </div>
-    </form>
+    </div>
 
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js"
@@ -56,6 +96,7 @@
       integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
       crossorigin="anonymous"
     ></script>
+    <script src="https://unpkg.com/vue@next"></script>
     <script src="js/login.js"></script>
   </body>
 </html>
